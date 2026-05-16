@@ -63,7 +63,7 @@ test('Step 5 Verify Booking Confirmation in MyBookings Page', async () => {
 
     const myBookingPage = poManager.getMyBookingsPage();
     await homePage.goToMyBookings();
-    await page.waitForLoadState('networkidle');
+    await myBookingPage.bookingCards.first().waitFor();
     expect(page.url()).toBe(URL+'bookings');
     await expect(page).toHaveURL(URL+'bookings');
     

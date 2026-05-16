@@ -1,6 +1,6 @@
 // @ts-check
 import { defineConfig, devices } from '@playwright/test';
-import { worker } from 'node:cluster';
+import { worker, workers } from 'node:cluster';
 import { time } from 'node:console';
 
 /**
@@ -17,7 +17,7 @@ import { time } from 'node:console';
 const config = ({
   testDir: './tests/',
   // retries: 1,
-  // workers: 5,
+  workers: 2,
   timeout: 30 * 1000,
   expect: {
     timeout: 5000,
@@ -25,7 +25,7 @@ const config = ({
   use: {
    browserName: 'chromium',
    trace: 'on',
-   headless : false,
+   headless : true,
    screenshot: 'on',
 
   },
