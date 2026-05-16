@@ -77,6 +77,7 @@ test('Step 6 Verify Seat Count is decreased by 1 in Events Page', async () => {
     await homePage.goToEvents();
     const eventPage = poManager.getEventPage();
     expect(eventPage.isEventsLoaded).toBeTruthy();
+    await eventPage.eventCard.first().waitFor();
     const allEvents = await eventPage.getAllEvents();
     const myEvent = allEvents.filter({ hasText: eventTitle }).first();
     await expect(myEvent).toBeVisible();
