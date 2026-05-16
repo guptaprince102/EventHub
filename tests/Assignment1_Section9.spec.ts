@@ -85,7 +85,6 @@ test('Step 6 Verify Seat Count is decreased by 1 in Events Page', async () => {
     await expect(myEvent).toBeVisible();
     const seatCountAfterBooking = parseInt(await myEvent.getByText('Seat').first().innerText());
     console.log(seatCountAfterBooking);
-    //test
     
     expect(seatCountAfterBooking === seatCount-1).toBeTruthy();
 
