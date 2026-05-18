@@ -16,7 +16,7 @@ import { time } from 'node:console';
  */
 const config = ({
   testDir: './tests/',
-  retries: 3,
+  retries: 0,
   workers: 1,
   timeout: 30 * 1000,
   expect: {
@@ -25,7 +25,7 @@ const config = ({
   use: {
    browserName: 'chromium',
    trace: 'on',
-   headless : true,
+   headless : false,
    screenshot: 'on',
 
   },
