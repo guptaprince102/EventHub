@@ -37,7 +37,8 @@ test('Step 1 Login', async () => {
     expect(await eventPage.isEventsLoaded()).toBeTruthy();
     const allEvents = await eventPage.getAllEvents();
     const myEvent = allEvents.filter({ hasText: eventTitle }).first();
-    await expect(myEvent).toBeVisible();
+    // Wait with longer timeout for event to appear in cloud environments
+    await expect(myEvent).toBeVisible({ timeout: 15000 });
     seatCount = parseInt(await myEvent.getByText('Seat').first().innerText());
     
     await myEvent.getByTestId('book-now-btn').click();
@@ -67,7 +68,8 @@ test('Step 1 Login', async () => {
     // Refetch the event list after navigation (previous reference is stale)
     const updatedAllEvents = await eventPage.getAllEvents();
     const updatedMyEvent = updatedAllEvents.filter({ hasText: eventTitle }).first();
-    await expect(updatedMyEvent).toBeVisible();
+    // Wait with longer timeout for event to appear
+    await expect(updatedMyEvent).toBeVisible({ timeout: 15000 });
     const seatCountAfterBooking = parseInt(await updatedMyEvent.getByText('Seat').first().innerText());
     expect(seatCountAfterBooking).toBe(seatCount - 1);
 
