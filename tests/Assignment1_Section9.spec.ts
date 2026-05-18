@@ -34,7 +34,7 @@ test('Step 1 Login', async () => {
     // 'Step 3 Verify the Event is created'
     await homePage.goToEvents();
     const eventPage = poManager.getEventPage();
-    expect(eventPage.isEventsLoaded).toBeTruthy();
+    expect(await eventPage.isEventsLoaded()).toBeTruthy();
     const allEvents = await eventPage.getAllEvents();
     const myEvent = allEvents.filter({ hasText: eventTitle }).first();
     await expect(myEvent).toBeVisible();
@@ -62,11 +62,13 @@ test('Step 1 Login', async () => {
 
     // 'Step 6 Verify Seat Count is decreased by 1 in Events Page'
     await homePage.goToEvents();
-    expect(eventPage.isEventsLoaded).toBeTruthy();
+    expect(await eventPage.isEventsLoaded()).toBeTruthy();
     await eventPage.eventCard.first().waitFor();
-    await allEvents.first().waitFor();
-    await expect(myEvent).toBeVisible();
-    const seatCountAfterBooking = parseInt(await myEvent.getByText('Seat').first().innerText());
+    // Refetch the event list after navigation (previous reference is stale)
+    const updatedAllEvents = await eventPage.getAllEvents();
+    const updatedMyEvent = updatedAllEvents.filter({ hasText: eventTitle }).first();
+    await expect(updatedMyEvent).toBeVisible();
+    const seatCountAfterBooking = parseInt(await updatedMyEvent.getByText('Seat').first().innerText());
     expect(seatCountAfterBooking).toBe(seatCount - 1);
 
 })
