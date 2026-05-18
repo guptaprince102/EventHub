@@ -12,6 +12,7 @@ export class EventPage{
         
     }
     async isEventsLoaded(){
+        await this.eventCard.first().waitFor();
         return await this.eventCard.first().isVisible();
     }
 

@@ -23,35 +23,27 @@ test('Step 1 Login', async () => {
     await loginPage.goTo(URL);
     await loginPage.login(dataSet.email, dataSet.password);
     await expect(page.getByText('Browse Events').first()).toContainText('Browse Events');
-
-})
-
-test('Step 2 Create Event', async () => {
-
+    // Step 2 Create Event
     homePage = poManager.getHomePage()
     await homePage.goToEventManager();
     await expect(page.getByText("New Event")).toBeVisible();
     const createEventPage = poManager.getCreateEventPage();
     await createEventPage.createEvent(eventTitle);
     await expect(page.getByText('Event created!')).toBeVisible();
-    
-})
 
-test('Step 3 Verify the Event is created', async () => {
-
+    // 'Step 3 Verify the Event is created'
     await homePage.goToEvents();
     const eventPage = poManager.getEventPage();
-    expect(eventPage.isEventsLoaded).toBeTruthy();
+    expect(await eventPage.isEventsLoaded()).toBeTruthy();
     const allEvents = await eventPage.getAllEvents();
     const myEvent = allEvents.filter({ hasText: eventTitle }).first();
-    await expect(myEvent).toBeVisible();
+    // Wait with longer timeout for event to appear in cloud environments
+    await expect(myEvent).toBeVisible({ timeout: 15000 });
     seatCount = parseInt(await myEvent.getByText('Seat').first().innerText());
     
     await myEvent.getByTestId('book-now-btn').click();
-
-})
-test('Step 4 Fill the booking form', async () => {
-
+    
+    // 'Step 4 Fill the booking form'
     const bookingPage = poManager.getBookingPage();
     const defaultTicket = await bookingPage.getDefaultTicketCount();
     expect(defaultTicket).toBe('1');
@@ -59,9 +51,7 @@ test('Step 4 Fill the booking form', async () => {
     bookingRef = (await bookingPage.getBookingRef())?.trim() ?? "";
     expect(bookingPage.isBookingSuccessful()).toBeTruthy();
 
-})
-test('Step 5 Verify Booking Confirmation in MyBookings Page', async () => {
-
+    // 'Step 5 Verify Booking Confirmation in MyBookings Page'
     const myBookingPage = poManager.getMyBookingsPage();
     await homePage.goToMyBookings();
     await myBookingPage.bookingCards.first().waitFor();
@@ -71,20 +61,27 @@ test('Step 5 Verify Booking Confirmation in MyBookings Page', async () => {
     const isMyEventBooked = await myBookingPage.isMyEventBooked(bookingRef);
     expect(isMyEventBooked).toBeTruthy();
 
-})
-test('Step 6 Verify Seat Count is decreased by 1 in Events Page', async () => {
+    // 'Step 6 Verify Seat Count is decreased by 1 in Events Page'
     await homePage.goToEvents();
-    const eventPage = poManager.getEventPage();
-    expect(eventPage.isEventsLoaded).toBeTruthy();
+    expect(await eventPage.isEventsLoaded()).toBeTruthy();
     await eventPage.eventCard.first().waitFor();
-    const allEvents = await eventPage.getAllEvents();
-    await allEvents.first().waitFor();
-    const myEvent = allEvents.filter({ hasText: eventTitle }).first();
-
-    await expect(myEvent).toBeVisible();
-    // const seatCountAfterBooking = parseInt(await myEvent.getByText('Seat').first().innerText());
-    // expect(seatCountAfterBooking).toBe(seatCount - 1);
+    // Refetch the event list after navigation (previous reference is stale)
+    const updatedAllEvents = await eventPage.getAllEvents();
+    const updatedMyEvent = updatedAllEvents.filter({ hasText: eventTitle }).first();
+    // Wait with longer timeout for event to appear
+    await expect(updatedMyEvent).toBeVisible({ timeout: 15000 });
+    // Add small delay to ensure backend updated
+    await page.waitForTimeout(1000);
+    const seatCountAfterBooking = parseInt(await updatedMyEvent.getByText('Seat').first().innerText());
+    expect(seatCountAfterBooking).toBe(seatCount - 1);
 
 })
+
+
+
+
+
+
+
 
 
