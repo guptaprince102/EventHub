@@ -64,16 +64,10 @@ test('Step 1 Login', async () => {
     // 'Step 6 Verify Seat Count is decreased by 1 in Events Page'
     await homePage.goToEvents();
     await page.reload({waitUntil: 'domcontentloaded'});
+    
     expect(await eventPage.isEventsLoaded()).toBeTruthy();
     await eventPage.eventCard.first().waitFor();
-    // Refetch the event list after navigation (previous reference is stale)
-    // const updatedAllEvents = await eventPage.getAllEvents();
-    // const updatedMyEvent = updatedAllEvents.filter({ hasText: eventTitle }).first();
-    // Wait with longer timeout for event to appear
-    // await expect(updatedMyEvent).toBeVisible({ timeout: 15000 });
-    // Add small delay to ensure backend updated
-    // await page.waitForTimeout(1000);
-    // await page.reload({waitUntil: 'domcontentloaded'});
+    
     const seatCountAfterBooking = parseInt(await myEvent.getByText('Seat').first().innerText());
     expect(seatCountAfterBooking).toBe(seatCount - 1);
 
