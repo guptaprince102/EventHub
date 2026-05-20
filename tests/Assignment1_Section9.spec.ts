@@ -67,14 +67,14 @@ test('Step 1 Login', async () => {
     expect(await eventPage.isEventsLoaded()).toBeTruthy();
     await eventPage.eventCard.first().waitFor();
     // Refetch the event list after navigation (previous reference is stale)
-    const updatedAllEvents = await eventPage.getAllEvents();
-    const updatedMyEvent = updatedAllEvents.filter({ hasText: eventTitle }).first();
+    // const updatedAllEvents = await eventPage.getAllEvents();
+    // const updatedMyEvent = updatedAllEvents.filter({ hasText: eventTitle }).first();
     // Wait with longer timeout for event to appear
     // await expect(updatedMyEvent).toBeVisible({ timeout: 15000 });
     // Add small delay to ensure backend updated
     // await page.waitForTimeout(1000);
-    await page.reload({waitUntil: 'domcontentloaded'});
-    const seatCountAfterBooking = parseInt(await updatedMyEvent.getByText('Seat').first().innerText());
+    // await page.reload({waitUntil: 'domcontentloaded'});
+    const seatCountAfterBooking = parseInt(await myEvent.getByText('Seat').first().innerText());
     expect(seatCountAfterBooking).toBe(seatCount - 1);
 
 })
