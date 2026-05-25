@@ -16,11 +16,11 @@ import { time } from 'node:console';
  */
 const config = ({
   testDir: './tests/',
-  retries: 3,
+  retries: 0,
   workers: 1,
-  timeout: 90 * 1000,
+  timeout: 30 * 1000,
   expect: {
-    timeout: 15000,
+    timeout: 3000,
   },
   use: {
    browserName: 'chromium',
