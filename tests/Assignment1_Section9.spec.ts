@@ -6,10 +6,10 @@ const URL = 'https://eventhub.rahulshettyacademy.com/';
 
 let page: Page;
 let poManager: POManager;
-let homePage : HomePage;
+let homePage: HomePage;
 let eventTitle = `Test Event ${Date.now()}`;
-let seatCount : number;
-let bookingRef : string= "";
+let seatCount: number;
+let bookingRef: string = "";
 
 test.beforeAll(async ({ browser }) => {
     const context = await browser.newContext();
@@ -23,36 +23,27 @@ test('Step 1 Login', async () => {
     await loginPage.goTo(URL);
     await loginPage.login(dataSet.email, dataSet.password);
     await expect(page.getByText('Browse Events').first()).toContainText('Browse Events');
-
-})
-
-test('Step 2 Create Event', async () => {
-
+    // Step 2 Create Event
     homePage = poManager.getHomePage()
     await homePage.goToEventManager();
     await expect(page.getByText("New Event")).toBeVisible();
     const createEventPage = poManager.getCreateEventPage();
     await createEventPage.createEvent(eventTitle);
     await expect(page.getByText('Event created!')).toBeVisible();
-    
-})
 
-test('Step 3 Verify the Event is created', async () => {
-
+    // 'Step 3 Verify the Event is created'
     await homePage.goToEvents();
     const eventPage = poManager.getEventPage();
-    expect(eventPage.isEventsLoaded).toBeTruthy();
+    expect(await eventPage.isEventsLoaded()).toBeTruthy();
     const allEvents = await eventPage.getAllEvents();
     const myEvent = allEvents.filter({ hasText: eventTitle }).first();
-    await expect(myEvent).toBeVisible();
+    // Wait with longer timeout for event to appear in cloud environments
+    await expect(myEvent).toBeVisible({ timeout: 15000 });
     seatCount = parseInt(await myEvent.getByText('Seat').first().innerText());
-    console.log(seatCount);
     
     await myEvent.getByTestId('book-now-btn').click();
-
-})
-test('Step 4 Fill the booking form', async () => {
-
+    
+    // 'Step 4 Fill the booking form'
     const bookingPage = poManager.getBookingPage();
     const defaultTicket = await bookingPage.getDefaultTicketCount();
     expect(defaultTicket).toBe('1');
@@ -60,9 +51,7 @@ test('Step 4 Fill the booking form', async () => {
     bookingRef = (await bookingPage.getBookingRef())?.trim() ?? "";
     expect(bookingPage.isBookingSuccessful()).toBeTruthy();
 
-})
-test('Step 5 Verify Booking Confirmation in MyBookings Page', async () => {
-
+    // 'Step 5 Verify Booking Confirmation in MyBookings Page'
     const myBookingPage = poManager.getMyBookingsPage();
     await homePage.goToMyBookings();
     await myBookingPage.bookingCards.first().waitFor();
@@ -72,23 +61,23 @@ test('Step 5 Verify Booking Confirmation in MyBookings Page', async () => {
     const isMyEventBooked = await myBookingPage.isMyEventBooked(bookingRef);
     expect(isMyEventBooked).toBeTruthy();
 
-})
-test('Step 6 Verify Seat Count is decreased by 1 in Events Page', async () => {
+    // 'Step 6 Verify Seat Count is decreased by 1 in Events Page'
     await homePage.goToEvents();
-    const eventPage = poManager.getEventPage();
-    expect(eventPage.isEventsLoaded).toBeTruthy();
-    await eventPage.eventCard.first().waitFor();
-    const allEvents = await eventPage.getAllEvents();
-    await allEvents.first().waitFor();
-    const myEvent = allEvents.filter({ hasText: eventTitle }).first();
-
-    await expect(myEvent).toBeVisible();
-    const seatCountAfterBooking = parseInt(await myEvent.getByText('Seat').first().innerText());
-    console.log(seatCountAfterBooking);
-    //test
+    await page.reload({waitUntil: 'domcontentloaded'});
     
-    expect(seatCountAfterBooking === seatCount-1).toBeTruthy();
+    expect(await eventPage.isEventsLoaded()).toBeTruthy();
+    await eventPage.eventCard.first().waitFor();
+    
+    const seatCountAfterBooking = parseInt(await myEvent.getByText('Seat').first().innerText());
+    expect(seatCountAfterBooking).toBe(seatCount - 1);
 
 })
+
+
+
+
+
+
+
 
 
