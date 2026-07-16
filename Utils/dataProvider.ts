@@ -1,11 +1,10 @@
 import fs from 'fs';
 
-export class DataProvider{
-    static getDataFromJSON(filePath:string){
+export class DataProvider {
 
-        let data:string = JSON.parse(fs.readFileSync(filePath,'utf8'));
+    static getTestDataFromJson(filePath:string) {
+        let data: any = JSON.parse(fs.readFileSync(filePath,'utf8'));
         return data;
-
     }
 
 }
