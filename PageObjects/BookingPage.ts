@@ -1,4 +1,5 @@
 import {Locator, Page} from "@playwright/test";
+import {RandomDataUtil} from "../Utils/randomDataGenerator";
 
 export class BookingPage{
     page : Page;
@@ -26,9 +27,9 @@ export class BookingPage{
         return this.ticketCount.textContent(); 
     }
     async fillBookingForm(){
-        await this.fullName.fill('Test user');
-        await this.email.fill('test@gmail.com');
-        await this.phoneNumber.fill('1234567890');
+        await this.fullName.fill(RandomDataUtil.getRandomFullName());
+        await this.email.fill(RandomDataUtil.getRandomEmail(false));
+        await this.phoneNumber.fill(RandomDataUtil.getRandomPhoneNumber('mobile'));
         await this.confirmButton.click();
     }
     async isBookingSuccessful(){

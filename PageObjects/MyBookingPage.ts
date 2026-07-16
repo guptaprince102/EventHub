@@ -24,6 +24,7 @@ export class MyBookingPage{
             
             if((await this.bookingRef1.nth(i).textContent())?.includes(eventId)){
                 isMyEventBooked = true;
+                break;
             }
             
         }

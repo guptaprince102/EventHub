@@ -16,8 +16,8 @@ import { time } from 'node:console';
  */
 const config = ({
   testDir: './tests/',
-  retries: 0,
-  workers: 1,
+  retries: 1,
+  workers: 3,
   timeout: 30 * 1000,
   expect: {
     timeout: 3000,

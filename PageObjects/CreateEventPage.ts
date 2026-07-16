@@ -1,4 +1,5 @@
 import {Locator, Page} from "@playwright/test";
+import {RandomDataUtil} from "../Utils/randomDataGenerator";
 
 export class CreateEventPage{
     page : Page;
@@ -24,12 +25,12 @@ export class CreateEventPage{
     }
     async createEvent(eventTitle : string){
         await this.title.fill(eventTitle);
-        await this.description.fill("Test Description");
-        await this.city.fill("Delhi");
-        await this.venue.fill("Delhi");
-        await this.eventSlot.fill('2027-12-31T10:00');
-        await this.price.fill('10');
-        await this.totalSeats.fill('50');
+        await this.description.fill(RandomDataUtil.getRandomText());
+        await this.city.fill(RandomDataUtil.getRandomLocation());
+        await this.venue.fill(RandomDataUtil.getRandomLocation());
+        await this.eventSlot.fill(RandomDataUtil.getRandomDateSlot().toISOString().slice(0,16));
+        await this.price.fill(RandomDataUtil.getRandomNumber(10,50,10).toString());
+        await this.totalSeats.fill(RandomDataUtil.getRandomNumber(10,50,10).toString());
         await this.submit.click();
 
     }

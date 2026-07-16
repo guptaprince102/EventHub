@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test:all": "npx playwright test"
+    "test:all": "playwright test",
+    "test:all:headed": "playwright test --headed"
   },
   "keywords": [],
   "author": "",
@@ -14,9 +15,11 @@
     "@azure/identity": "^4.13.1",
     "@azure/playwright": "^1.1.5",
     "@playwright/test": "^1.59.1",
-    "@types/node": "^25.6.2"
+    "@types/node": "^25.6.2",
+    "allure-playwright": "^3.10.2"
   },
   "dependencies": {
-    "@cucumber/cucumber": "^12.8.3"
+    "@cucumber/cucumber": "^12.8.3",
+    "@faker-js/faker": "^10.5.0"
   }
 }
