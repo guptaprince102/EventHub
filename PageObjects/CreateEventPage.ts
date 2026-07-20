@@ -28,7 +28,7 @@ export class CreateEventPage{
         await this.description.fill(RandomDataUtil.getRandomText());
         await this.city.fill(RandomDataUtil.getRandomLocation());
         await this.venue.fill(RandomDataUtil.getRandomLocation());
-        await this.eventSlot.fill(RandomDataUtil.getRandomDateSlot().toISOString().slice(0,16));
+        await this.eventSlot.fill(RandomDataUtil.getRandomDateSlot());
         await this.price.fill(RandomDataUtil.getRandomNumber(10,50,10).toString());
         await this.totalSeats.fill(RandomDataUtil.getRandomNumber(10,50,10).toString());
         await this.submit.click();

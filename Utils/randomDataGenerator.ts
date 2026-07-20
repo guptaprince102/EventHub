@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { stringify } from "node:querystring";
+import {DateTime} from "luxon";
 
 export class RandomDataUtil{
 
@@ -12,7 +12,7 @@ export class RandomDataUtil{
     }
 
     static getRandomDateSlot(){
-       return faker.date.future({refDate: '2027-12-31T10:00'});
+       return DateTime.now().plus({days:10}).toFormat("yyyy-MM-dd'T'HH:mm");
     }
 
     static getRandomNumber(min:number, max:number, multipleOf:number){
